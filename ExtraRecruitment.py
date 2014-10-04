@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-  	 	
 
 from bs4 import BeautifulSoup
@@ -13,37 +14,38 @@ if os.path.exists("%s/Users/JingqianLi/Documents/serach_result/.DS_Store"):
 	os.remove("%s/Users/JingqianLi/Desktop/search_result/.DS_Store")  
 '''
 
-L = os.listdir('/Users/JingqianLi/Documents/Courses/Trials/search_result2')	 # put all the xml file names into an array
+L = os.listdir('/Users/JingqianLi/Documents/Courses/Trials/search_result')	 # put all the xml file names into an array
 #del L[0]  # delete the frist element because I couldn't remove .DS_Store 
 
 processedFile = 0
 
-outputFile = open('new.xml', 'a')
+outputFile = open('extraRecruitment2.xml', 'a')
+outputFile.write('<Trials>')
+outputFile.write('\n')
+outputFile.write('<experiment>')
+outputFile.write('\n')
+
 for i in xrange(len(L)):
-	soup = BeautifulSoup(open("/Users/JingqianLi/Documents/Courses/Trials/search_result2/%s" %L[i]))  
+	soup = BeautifulSoup(open("/Users/JingqianLi/Documents/Courses/Trials/search_result/%s" %L[i])) 
+	 
 	if soup.eligibility == None:
 		processedFile += 1
-	else: 
-		outputFile.write(soup.id_info.prettify())
-		outputFile.write(soup.brief_title.prettify())
-		outputFile.write(soup.official_title.prettify())
-		outputFile.write(soup.sponsors.prettify())
-		outputFile.write(soup.source.prettify())
-		outputFile.write(soup.oversight_info.prettify())
-		outputFile.write(soup.brief_summary.prettify())
-		outputFile.write(soup.detailed_description.prettify())
-		outputFile.write(soup.overall_status.prettify())
-		outputFile.write(soup.start_date.prettify())
-		outputFile.write(soup.phase.prettify())
-		outputFile.write(soup.study_type.prettify())
-		outputFile.write(soup.study_design.prettify())
-		outputFile.write(soup.enrollment.prettify())
-		for condition in soup.find_all('condition'):     # trying to write all the <condition> notes
-			outputFile.write(condition)
+
+	else:
+		count = 0
+		while (soup.find_all()[count] != soup.id_info):
+			count += 1
+		while (soup.find_all()[count] != soup.eligibility):
+			outputFile.write(soup.find_all()[count].prettify())
+			count += 1
 		outputFile.write(soup.eligibility.prettify())
 		outputFile.write('\n'*3)
-		print i
+		print i+1
 		processedFile += 1
+
+outputFile.write('</experiment>')
+outputFile.write('\n')
+outputFile.write('</Trials>')
 
 outputFile.close()  
 
