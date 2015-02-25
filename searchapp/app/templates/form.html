@@ -1,4 +1,15 @@
-<form method="POST" action="/testform/">
-    {{ form.name.label }} {{ form.name(size=20) }}
-    <input type="submit" value="Go">
-</form>
+<!-- extend from base layout -->
+{% extends "index.html" %}
+
+{% block content %}
+  <h1>Search</h1>
+  <form action="" >
+      {{ form.hidden_tag() }}
+      <p>
+          Please enter query:<br>
+          {{ form.age(size=80) }}<br>
+      </p>
+      <p>{{ form.gender }} Patient gender</p>
+      <p><input type="submit" value="Search"></p>
+  </form>
+{% endblock %}
