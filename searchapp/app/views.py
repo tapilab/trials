@@ -1,4 +1,6 @@
+from flask import render_template
 from app import app
+from app import forms
 
 @app.route('/')
 @app.route('/index')
@@ -8,13 +10,13 @@ def index():
 @app.route('/search')
 def search():
     user = { 'nickname': 'Miguel' } # fake user
-    return '''
-<html>
-  <head>
-    <title>Home Page</title>
-  </head>
-  <body>
-    <h1>Hello, ''' + user['nickname'] + '''</h1>
-  </body>
-</html>
-'''
+    return render_template("index.html",
+    		title = 'Home',
+    		user = user)
+
+@app.route('/query')
+def query():
+    form = SearchQueryForm()
+    return render_template('login.html', 
+                           title='Search',
+                           form=form)
