@@ -1,17 +1,19 @@
-RAWDIR = '/Users/JingqianLi/Documents/Courses/Trials/SEARCH_TEST'
-INDEXDIR='/Users/JingqianLi/Documents/Courses/Trials/index'
+# RAWDIR stores the search results from ClinicalTrials.gov, one trial per xml file.
+#RAWDIR='/Users/JingqianLi/Documents/Courses/Trials/search_result'
 
-from flask import render_template
-from app import forms, app
-from flask_wtf import Form
-from wtforms import StringField, BooleanField, IntegerField
-from wtforms.validators import DataRequired
+RAWDIR = '/Users/JingqianLi/Documents/Courses/Trials/SEARCH_TEST'
+    
+# The search index will be stored here.
+INDEXDIR='/Users/JingqianLi/Documents/Courses/Trials/index'
+#!mkdir -p $INDEXDIR
+
 import glob 
 import io
 import sys, traceback
 import re
 import time
 import csv
+
 from datetime import date     
 from lxml import etree
 import xml.etree.ElementTree as ET
@@ -20,53 +22,7 @@ from whoosh.index import create_in
 from whoosh.qparser import QueryParser
 import whoosh.qparser as qparser
 from whoosh.query import *
-
-@app.route('/')
-@app.route('/index')
-def index():
-    return "Hello, World!"
-
-
-@app.route('/search')
-def search():
-    user = { 'nickname': 'Miguel' } # fake user
-    return render_template("index.html",
-    		title = 'Home',
-    		user = user)
-
-
-@app.route('/query')
-def query():
-    form = SearchQueryForm()
-    return render_template('login.html',
-                           title='Search',
-                           form=form)
-
-
-@app.route('/testform/', methods=['GET', 'POST'])
-def testform():
-    form = MyForm()
-    if form.validate_on_submit():
-        #return '<html>your age is %s</html>\r\n <html>your gender is %s</html>' % (form.age.data,form.gender.data)
-        #test = Patient(form.age.data,form.gender.data,form.inclusion.data,form.exclusion.data)
-        #print form.age.data
-        searcher = TrialSearcher(RAWDIR, limit=99999)
-        #results = searcher.search(test._get_query_string())
-        #return '<html>your results are %s</html>  <html>the patient age is %s</html>' % (results,Patient.age)
-    return render_template('testform.html', form=form)
-
-
-class MyForm(Form):
-    #name = StringField('name', validators=[DataRequired()])
-    age = StringField('Patient Age', validators=[DataRequired()])  ## not done yet
-    gender = StringField('Gender', validators=[DataRequired()])
-    inclusion = StringField('Inclusion Criterial', default=None)
-    exclusion = StringField('Exclusion Criterial', default=None)
-
-    def __init__(self):
-        super(MyForm, self).__init__(csrf_enabled=False)
-
-
+    
 class TrialSearcher:
     """ Index a list of trial xml documents to support fielded queries. """
         
@@ -219,7 +175,7 @@ class Patient:
     """ Create an patient object that has fields from the trial entity """
     
     def __init__(self, age, gender, inclusion, exclusion):
-        self.query = self._csv_to_query(age,gender,inclusion,exclusion)
+        self.query = self._csv_to_query(csvfile)
     
     def _csv_to_query(self, age, gender, inclusion, exclusion):
         myage = self._convert_birthdate(age)
@@ -254,5 +210,4 @@ class Patient:
         except: 
             print "Gender is not valid"
         return new_gender
-
 
