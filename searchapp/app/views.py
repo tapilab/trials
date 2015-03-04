@@ -48,11 +48,11 @@ def testform():
     form = MyForm()
     if form.validate_on_submit():
         #return '<html>your age is %s</html>\r\n <html>your gender is %s</html>' % (form.age.data,form.gender.data)
-        #test = Patient(form.age.data,form.gender.data,form.inclusion.data,form.exclusion.data)
-        #print form.age.data
+        test = Patient(form.age.data,form.gender.data,form.inclusion.data,form.exclusion.data)
+        print form.age.data
         searcher = TrialSearcher(RAWDIR, limit=99999)
-        #results = searcher.search(test._get_query_string())
-        #return '<html>your results are %s</html>  <html>the patient age is %s</html>' % (results,Patient.age)
+        results = searcher.search(test._get_query_string())
+        return '<html>your results are %s</html>  <html>the patient age is %s</html>' % (results,Patient.age)
     return render_template('testform.html', form=form)
 
 
@@ -235,6 +235,7 @@ class Patient:
         return str(self.query.normalize())
     
     def _convert_birthdate(self,age):
+        # fix that part to translate a string input to age
         try:
             month, day, year = [int(x) for x in age.split("/")]   # The format example is: 2/1/91
         except:
