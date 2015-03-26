@@ -1,9 +1,8 @@
 <form method="POST" action="/testform/">
-    <p> <br> <br> <br> <h1>Patient Information</h1> <br> <br>
-    {{ form.age.label }} {{form.age(size=20) }}
-    {{ form.age_unit.label }} {{form.age_unit(size=4) }} <br> <br> <br>
+    <div>  <h1>Patient Information</h1> </div>
+    <div>{{ form.age.label }} {{form.age(size=20,rows="99") }}
+    {{ form.age_unit.label }} {{form.age_unit(size=4) }} </div> <br>
     {{ form.gender.label }} {{ form.gender(size=2) }} <br> 
-    <textarea name="inclusion" rows="10" cols="50">Inclusion Criteria</textarea> <br> <br> <br>
-    <textarea name="exclusion" rows="10" cols="50">Exclusion Criteria</textarea> <br> <br> <br>
-    <input type="submit" value="Go" > </p>
+    <div>{{form.inclusion.label}} {{form.inclusion(rows="20",cols="50")}}
+    {{form.exclusion.label}} {{form.exclusion(rows="20", cols="50")}} </div>
 </form>
