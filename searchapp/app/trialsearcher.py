@@ -1,5 +1,18 @@
+
+# Clinical Trial Data
+
+"""We download clinical trials from [ClinicalTrials.gov](http://clinicaltrials.gov)
+and create a search engine using [Whoosh](https://pythonhosted.org/Whoosh/)."""
+
+
+# RAWDIR stores the search results from ClinicalTrials.gov, one trial per xml file.
+#RAWDIR='/Users/JingqianLi/Documents/Courses/Trials/search_result'
+
 RAWDIR = '/Users/JingqianLi/Documents/Courses/Trials/SEARCH_TEST'
+    
+# The search index will be stored here.
 INDEXDIR='/Users/JingqianLi/Documents/Courses/Trials/index'
+#!mkdir -p $INDEXDIR
 
 import glob 
 import io
@@ -7,13 +20,16 @@ import sys, traceback
 import re
 import time
 import csv
+
 from datetime import date     
+from lxml import etree
+import xml.etree.ElementTree as ET
 from whoosh.fields import KEYWORD, DATETIME, ID, Schema, TEXT, NUMERIC
 from whoosh.index import create_in
 from whoosh.qparser import QueryParser
 import whoosh.qparser as qparser
 from whoosh.query import *
-
+    
 class TrialSearcher:
     """ Index a list of trial xml documents to support fielded queries. """
         
@@ -157,5 +173,61 @@ class TrialSearcher:
                 print 'Exclusion: ', doc['exclusion']
                 print 'Inclusion: ', doc['inclusion']
 
-
                 
+            
+# This calss is for patient object
+
+
+class Patient:
+    """ Create an patient object that has fields from the trial entity """
+    
+    #query = ''
+    
+    def __init__(self, csvfile):
+        self.query = self._csv_to_query(csvfile)
+    
+    def _csv_to_query(self,csvfile):
+        with open(csvfile) as f:
+            f_csv = csv.DictReader(f)
+            a_list = []
+            i = 0
+            for row in f_csv:
+                a_list.append(row)
+                #print a_list[i], '\n'
+                i += 1
+        dic = a_list[99]  # Pick up a case of patient randomly
+        print dic['DATE_OF_BIRTH']
+        biomarker = dic['LONG_NAME']
+        myage = self._convert_birthdate(dic['DATE_OF_BIRTH'])
+        mygender = self._convert_gender(dic['GENDER'])
+        myquery = And([NumericRange('minimum_age', 0, myage),
+                       NumericRange('maximum_age', myage, 99999),
+                       Phrase('inclusion',biomarker.split()), #Term('exclusion', biomarker),
+                       Not(Phrase('exclusion', biomarker.split())),
+                       Or([Term('gender',mygender), Term('gender','both'), Term('gender', 'N/A')])])
+        return myquery
+        
+    def _get_query_string(self):
+        return str(self.query.normalize())
+    
+    def _convert_birthdate(self,age):
+        try:
+            month, day, year = [int(x) for x in age.split("/")]   # The format example is: 2/1/91
+        except:
+            print "Birth date is not valid!"
+        today = date.today()
+        if ((year+2000)>today.year):
+            year = year+1900
+        else:
+            year = year+2000
+        birth = date(year,month,day)
+        time_to_today = abs(birth-today)
+        return time_to_today.days
+    
+    def _convert_gender(self, gender):
+        try: 
+            new_gender = gender.lower()
+        except: 
+            print "Gender is not valid"
+        return new_gender
+
