@@ -183,51 +183,27 @@ class Patient:
     
     #query = ''
     
-    def __init__(self, csvfile):
-        self.query = self._csv_to_query(csvfile)
-    
-    def _csv_to_query(self,csvfile):
-        with open(csvfile) as f:
-            f_csv = csv.DictReader(f)
-            a_list = []
-            i = 0
-            for row in f_csv:
-                a_list.append(row)
-                #print a_list[i], '\n'
-                i += 1
-        dic = a_list[99]  # Pick up a case of patient randomly
-        print dic['DATE_OF_BIRTH']
-        biomarker = dic['LONG_NAME']
-        myage = self._convert_birthdate(dic['DATE_OF_BIRTH'])
-        mygender = self._convert_gender(dic['GENDER'])
-        myquery = And([NumericRange('minimum_age', 0, myage),
-                       NumericRange('maximum_age', myage, 99999),
-                       Phrase('inclusion',biomarker.split()), #Term('exclusion', biomarker),
-                       Not(Phrase('exclusion', biomarker.split())),
-                       Or([Term('gender',mygender), Term('gender','both'), Term('gender', 'N/A')])])
-        return myquery
+    def __init__(self, age, age_unit, gender, biomarker):
+        self.myage = self._convert_birthdate(age,age_unit)
+        self.mygender = gender
+        self.mybiomarker = biomarker
+        print self.myage
         
     def _get_query_string(self):
-        return str(self.query.normalize())
+        myquery = And([NumericRange('minimum_age', 0, self.myage),
+                       NumericRange('maximum_age', self.myage, 99999),
+                       Phrase('inclusion',self.mybiomarker.split()),
+                       Not(Phrase('exclusion', self.mybiomarker.split())),
+                       Or([Term('gender',self.mygender), Term('gender','both'), Term('gender', 'N/A')])])
+        return str(myquery.normalize())
     
-    def _convert_birthdate(self,age):
-        try:
-            month, day, year = [int(x) for x in age.split("/")]   # The format example is: 2/1/91
-        except:
-            print "Birth date is not valid!"
-        today = date.today()
-        if ((year+2000)>today.year):
-            year = year+1900
+    def _convert_birthdate(self,age,age_unit):
+        if age_unit == 'day':
+            return age
+        elif age_unit == 'week':
+            return 7*age
+        elif age_unit == 'month':
+            return 30*age
         else:
-            year = year+2000
-        birth = date(year,month,day)
-        time_to_today = abs(birth-today)
-        return time_to_today.days
-    
-    def _convert_gender(self, gender):
-        try: 
-            new_gender = gender.lower()
-        except: 
-            print "Gender is not valid"
-        return new_gender
+            return 365*age
 

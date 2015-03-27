@@ -32,20 +32,18 @@ def testform():
     form = MyForm()
     if form.validate_on_submit():
         #return '<html>your age is %s</html>\r\n <html>your gender is %s</html>' % (form.age.data,form.gender.data)
-        test = Patient(form.age.data,form.gender.data,form.inclusion.data,form.exclusion.data)
-        print form.age.data
-        results = searcher.search(test._get_query_string())
-        return '<html>your results are %s</html>  <html>the patient age is %s</html>' % (results,Patient.age)
+        patient_file = Patient(form.age.data,form.age_unit.data,form.gender.data,form.biomarker.data)
+        results = searcher.search(patient_file._get_query_string())
+        print results
+        return '<html>your results are %s</html>  <html>the patient age is %s</html>' % (results,patient_file.age)
     return render_template('testform.html', form=form)
 
 
 class MyForm(Form):
-    #name = StringField('name', validators=[DataRequired()])
     age = IntegerField('Patient Age', validators=[DataRequired()])
     age_unit = SelectField(' ',validators=[DataRequired()],choices=[('year','Year'),('month','Month'),('week','Week'),('day','Day')],coerce=unicode)  ## not done yet
     gender = RadioField(u'Gender', validators=[DataRequired()],choices=[('female','Female'),('male','Male')], coerce=unicode)
-    inclusion = TextAreaField('Inclusion Criterial', default=None)
-    exclusion = TextAreaField('Exclusion Criterial', default=None)
+    biomarker = TextAreaField('Biomarker', validators=[DataRequired()])
 
     def __init__(self):
         super(MyForm, self).__init__(csrf_enabled=False)
