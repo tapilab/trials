@@ -6,38 +6,37 @@ from app import forms, app
 from flask_wtf import Form
 from wtforms import StringField, BooleanField, IntegerField, SelectField, TextAreaField, RadioField
 from wtforms.validators import DataRequired
-from trialsearcher import TrialSearcher, Patient  
+from trialsearcher import TrialSearcher, Patient 
 
-@app.route('/')
+
+@app.route('/', methods=['GET', 'POST'])
 def init():
-    return render_template("index.html")
+    form = HomePage()
+    if form.validate_on_submit():
+        global searcher
+        searcher = TrialSearcher(form.link_to_doc.data, limit=99999)
+        return search()
+    return render_template("homepage.html", form=form)
 
-@app.route('/index')
-def index():
-    searcher = TrialSearcher(RAWDIR, limit=99999)
-    return testform()
 
-
-
-@app.route('/query')
-def query():
-    form = SearchQueryForm()
-    return render_template('login.html',
-                           title='Search',
-                           form=form)
-
-# This one is the searching app
-@app.route('/testform/', methods=['GET', 'POST'])
-def testform():
+@app.route('/search', methods=['GET', 'POST'])
+def search():
     form = MyForm()
     if form.validate_on_submit():
         #return '<html>your age is %s</html>\r\n <html>your gender is %s</html>' % (form.age.data,form.gender.data)
         patient_file = Patient(form.age.data,form.age_unit.data,form.gender.data,form.biomarker.data)
         results = searcher.search(patient_file._get_query_string())
-        print results
-        return '<html>your results are %s</html>  <html>the patient age is %s</html>' % (results,patient_file.age)
-    return render_template('testform.html', form=form)
+        print form.biomarker.data, results
+        #return '<html>your results are %s</html>  <html>the patient age is %s</html>' % (results,patient_file.age)
+    return render_template('search.html', form=form)
 
+
+
+class HomePage(Form):
+    link_to_doc = StringField('Documents location:', validators=[DataRequired()])
+
+    def __init__(self):
+        super(HomePage, self).__init__(csrf_enabled=False)
 
 class MyForm(Form):
     age = IntegerField('Patient Age', validators=[DataRequired()])
@@ -47,5 +46,3 @@ class MyForm(Form):
 
     def __init__(self):
         super(MyForm, self).__init__(csrf_enabled=False)
-
-

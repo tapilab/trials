@@ -1,0 +1,10 @@
+<form method="POST" action="/search">
+    <div>  <h1>Patient Information</h1> </div>
+    <div>{{ form.age.label }} {{form.age(size=20,rows="99") }}
+    {{ form.age_unit.label }} {{form.age_unit(size=4) }} </div> <br> <br>
+    {{ form.gender.label }} {{ form.gender(size=2) }} <br> 
+    <div>{{form.biomarker.label}} {{form.biomarker(rows="20", cols="50")}} </div> <br> <br> 
+    <input type="submit" value="Go">
+</form>
+
+
