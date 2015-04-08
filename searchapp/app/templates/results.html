@@ -1,3 +1,7 @@
-<form method="POST" action="/results">
-<h1>print here<h1>
-</form>
+<!doctype html>
+<title>Hello from Flask</title>
+{% if results %}
+  <h1> {{ results }}</h1>
+{% else %}
+  <h1>Results not found!</h1>
+{% endif %}

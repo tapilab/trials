@@ -10,6 +10,10 @@ from patient import Patient
 from trialsearcher import TrialSearcher
 
 
+@app.route('/')
+def index():
+    return "Print here"
+
 @app.route('/null', methods=['GET', 'POST'])
 def init():
     form = HomePage()
@@ -19,8 +23,8 @@ def init():
         return search()
     return render_template("homepage.html", form=form)
 
-
-@app.route('/search', methods=['GET', 'POST'])
+# searching page
+@app.route('/search/', methods=['GET', 'POST'])
 def search():
     form = MyForm()
     if form.validate_on_submit():
@@ -29,14 +33,13 @@ def search():
         searcher = TrialSearcher()
         patient_file = Patient(form.age.data,form.age_unit.data,form.gender.data,form.biomarker.data)
         results = searcher.search(patient_file._get_query_string())
-        searcher.print_results(results)
+        return results(u'results')
         #return '<html>your results are %s</html>  <html>the patient age is %s</html>' % (results,patient_file.age)
     return render_template('search.html', form=form)
 
-@app.route('/results', methods=['GET', 'POST'])
-def results():
-    form = resultForm()
-    return render_template('results.html', form =form)
+@app.route('/results/<results>/', methods=['POST'])
+def results(results):
+    return render_template('results.html', results=results)
 
 
 class HomePage(Form):
