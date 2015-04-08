@@ -8,7 +8,7 @@ from wtforms import StringField, BooleanField, IntegerField, SelectField, TextAr
 from wtforms.validators import DataRequired
 from patient import Patient 
 from trialsearcher import TrialSearcher
-
+from . import searcher
 
 @app.route('/')
 def index():
@@ -18,8 +18,8 @@ def index():
 def init():
     form = HomePage()
     if form.validate_on_submit():
-        global searcher
-        searcher = TrialSearcher(form.link_to_doc.data, limit=99999)
+        #global searcher
+        #searcher = TrialSearcher(form.link_to_doc.data, limit=99999)
         return search()
     return render_template("homepage.html", form=form)
 
@@ -30,10 +30,11 @@ def search():
     if form.validate_on_submit():
         #return '<html>your age is %s</html>\r\n <html>your gender is %s</html>' % (form.age.data,form.gender.data)
         # Try biomarker: estrogen receptor
-        searcher = TrialSearcher()
+        # searcher = TrialSearcher()
         patient_file = Patient(form.age.data,form.age_unit.data,form.gender.data,form.biomarker.data)
-        results = searcher.search(patient_file._get_query_string())
-        return results(u'results')
+        results2 = searcher.search(patient_file._get_query_string())
+        return results(results2)
+        # return '<br>'.join([str(x) for x in results])  # results(u'results')
         #return '<html>your results are %s</html>  <html>the patient age is %s</html>' % (results,patient_file.age)
     return render_template('search.html', form=form)
 
