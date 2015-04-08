@@ -9,7 +9,7 @@ from wtforms.validators import DataRequired
 from trialsearcher import TrialSearcher, Patient 
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/null', methods=['GET', 'POST'])
 def init():
     form = HomePage()
     if form.validate_on_submit():
@@ -24,12 +24,18 @@ def search():
     form = MyForm()
     if form.validate_on_submit():
         #return '<html>your age is %s</html>\r\n <html>your gender is %s</html>' % (form.age.data,form.gender.data)
+        # Try biomarker: estrogen receptor
         patient_file = Patient(form.age.data,form.age_unit.data,form.gender.data,form.biomarker.data)
         results = searcher.search(patient_file._get_query_string())
-        print form.biomarker.data, results
+        print results
+        return results()
         #return '<html>your results are %s</html>  <html>the patient age is %s</html>' % (results,patient_file.age)
     return render_template('search.html', form=form)
 
+@app.route('/results', methods=['GET', 'POST'])
+def results():
+    form = resultForm()
+    return render_template('results.html', form =form)
 
 
 class HomePage(Form):
@@ -37,6 +43,10 @@ class HomePage(Form):
 
     def __init__(self):
         super(HomePage, self).__init__(csrf_enabled=False)
+
+class resultForm(Form):
+    def __init__(self):
+        super(resultForm,self).__init__(csrf_enabled=False)
 
 class MyForm(Form):
     age = IntegerField('Patient Age', validators=[DataRequired()])
