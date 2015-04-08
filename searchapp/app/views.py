@@ -6,7 +6,8 @@ from app import forms, app
 from flask_wtf import Form
 from wtforms import StringField, BooleanField, IntegerField, SelectField, TextAreaField, RadioField
 from wtforms.validators import DataRequired
-from trialsearcher import TrialSearcher, Patient 
+from patient import Patient 
+from trialsearcher import TrialSearcher
 
 
 @app.route('/null', methods=['GET', 'POST'])
@@ -25,10 +26,10 @@ def search():
     if form.validate_on_submit():
         #return '<html>your age is %s</html>\r\n <html>your gender is %s</html>' % (form.age.data,form.gender.data)
         # Try biomarker: estrogen receptor
+        searcher = TrialSearcher()
         patient_file = Patient(form.age.data,form.age_unit.data,form.gender.data,form.biomarker.data)
         results = searcher.search(patient_file._get_query_string())
-        print results
-        return results()
+        searcher.print_results(results)
         #return '<html>your results are %s</html>  <html>the patient age is %s</html>' % (results,patient_file.age)
     return render_template('search.html', form=form)
 
