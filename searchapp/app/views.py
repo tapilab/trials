@@ -2,7 +2,7 @@ RAWDIR = '/Users/JingqianLi/Documents/Courses/Trials/search_results'
 INDEXDIR='/Users/JingqianLi/Documents/Courses/Trials/index'
 
 from flask import render_template
-from app import forms, app
+from app import app
 from flask_wtf import Form
 from wtforms import StringField, BooleanField, IntegerField, SelectField, TextAreaField, RadioField
 from wtforms.validators import DataRequired
@@ -27,20 +27,20 @@ def init():
 @app.route('/search/', methods=['GET', 'POST'])
 def search():
     form = MyForm()
+    results2 = None
     if form.validate_on_submit():
         #return '<html>your age is %s</html>\r\n <html>your gender is %s</html>' % (form.age.data,form.gender.data)
         # Try biomarker: estrogen receptor
         # searcher = TrialSearcher()
         patient_file = Patient(form.age.data,form.age_unit.data,form.gender.data,form.biomarker.data)
         results2 = searcher.search(patient_file._get_query_string())
-        return results(results2)
-        # return '<br>'.join([str(x) for x in results])  # results(u'results')
+        results3 = searcher.print_results(results2)
+        #return results3
+        #return "Print here"
+        # return '<br>'.join([str(x) for x in results3])  # results(u'results')
         #return '<html>your results are %s</html>  <html>the patient age is %s</html>' % (results,patient_file.age)
-    return render_template('search.html', form=form)
+    return render_template('search.html', form=form, results = results2)
 
-@app.route('/results/<results>/', methods=['POST'])
-def results(results):
-    return render_template('results.html', results=results)
 
 
 class HomePage(Form):

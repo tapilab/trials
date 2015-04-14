@@ -6,5 +6,16 @@
     <div>{{form.biomarker.label}} {{form.biomarker(rows="20", cols="50")}} </div> <br> <br> 
     <input type="submit" value="Go">
 </form>
+	{% if results %}
+  	<h1> {{ results }}</h1>
 
+	{% else %}
+  	<h1>Results not found!</h1>
+	{% endif %}
+
+	{{for r in results}}
+	<th>age</th>
+
+	<tb>{{r.age}}</tb>
+	<tb>{{r.incluse}}</tb>
 
