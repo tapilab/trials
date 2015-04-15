@@ -34,11 +34,14 @@ class TrialSearcher:
         """ Print to stdout a list of search results.
         Params:
           results: A rank-ordered list of document ids."""
+        string = ''
         with self.index.searcher() as searcher:    #returns an iterator of docnums matching this query
             for r in results:
                 doc = searcher.stored_fields(r)
-                print '\t'.join([doc['nct_id'], doc['title']]), 'Gender: ', doc['gender']
-                print 'maximum age is: ', doc['maximum_age'],' days, and minimum_age is: ', doc['minimum_age'], ' days'
-                print 'Exclusion: ', doc['exclusion']
-                print 'Inclusion: ', doc['inclusion']
+                string += '\t'.join([doc['nct_id'], doc['title']]) + '\n' + 'Gender: ' + doc['gender']
+                string += '\n' + 'maximum age is: ' + str(doc['maximum_age']) + ' days, and minimum_age is: ' + str(doc['minimum_age']) + ' days'
+                string += '\n' + 'Exclusion: ' + doc['exclusion']
+                string += '\n' + 'Inclusion: ' + doc['inclusion'] + '\n'
+        print string
+        return string
 

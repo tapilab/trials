@@ -14,44 +14,23 @@ from . import searcher
 def index():
     return "Print here"
 
-@app.route('/null', methods=['GET', 'POST'])
-def init():
-    form = HomePage()
-    if form.validate_on_submit():
-        #global searcher
-        #searcher = TrialSearcher(form.link_to_doc.data, limit=99999)
-        return search()
-    return render_template("homepage.html", form=form)
-
 # searching page
 @app.route('/search/', methods=['GET', 'POST'])
 def search():
     form = MyForm()
-    results2 = None
+    results = None
+    resultsPrint = None
     if form.validate_on_submit():
-        #return '<html>your age is %s</html>\r\n <html>your gender is %s</html>' % (form.age.data,form.gender.data)
         # Try biomarker: estrogen receptor
-        # searcher = TrialSearcher()
         patient_file = Patient(form.age.data,form.age_unit.data,form.gender.data,form.biomarker.data)
-        results2 = searcher.search(patient_file._get_query_string())
-        results3 = searcher.print_results(results2)
+        results = searcher.search(patient_file._get_query_string())
+        resultsPrint = searcher.print_results(results)
+        
         #return results3
         #return "Print here"
         # return '<br>'.join([str(x) for x in results3])  # results(u'results')
         #return '<html>your results are %s</html>  <html>the patient age is %s</html>' % (results,patient_file.age)
-    return render_template('search.html', form=form, results = results2)
-
-
-
-class HomePage(Form):
-    link_to_doc = StringField('Documents location:', validators=[DataRequired()])
-
-    def __init__(self):
-        super(HomePage, self).__init__(csrf_enabled=False)
-
-class resultForm(Form):
-    def __init__(self):
-        super(resultForm,self).__init__(csrf_enabled=False)
+    return render_template('search.html', form=form, results = resultsPrint)
 
 class MyForm(Form):
     age = IntegerField('Patient Age', validators=[DataRequired()])

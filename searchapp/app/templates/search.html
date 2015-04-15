@@ -7,15 +7,8 @@
     <input type="submit" value="Go">
 </form>
 	{% if results %}
-  	<h1> {{ results }}</h1>
-
+  	<div> {{results}}</div>
 	{% else %}
   	<h1>Results not found!</h1>
 	{% endif %}
-
-	{{for r in results}}
-	<th>age</th>
-
-	<tb>{{r.age}}</tb>
-	<tb>{{r.incluse}}</tb>
 
