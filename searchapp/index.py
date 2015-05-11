@@ -20,6 +20,7 @@ import sys, traceback
 import re
 import time
 import csv
+import os
 
 from datetime import date     
 from lxml import etree
@@ -31,7 +32,18 @@ import whoosh.qparser as qparser
 from whoosh.query import *
     
 class Indexsearcher:
-    """ Index a list of trial xml documents to support fielded queries. """
+    """ Index a list of trial xml documents to support fielded queries. 
+        Get the path from file_path.txt """
+    lnum = 0
+    with open('file_path.txt','r') as fp:
+        for line in fp:
+            lnum+=1;
+            if (lnum == 3):
+                RAWDIR=line
+            elif (lnum == 7):
+                INDEXDIR=line
+    fp.close()
+    os.system('mkdir -p $INDEXDIR')
         
     def __init__(self, xml_dir, limit=99999):
         """
@@ -148,35 +160,7 @@ class Indexsearcher:
                 break
         writer.commit()
 
-    def get_index(self):
-        print self.index
-    
-    def search(self, query_str, limit=100):
-        """ Exectue a query on this index.
-        Params:
-          query_str: A possibly fielded query string. Searches the 'inclusion' field by default.
-          limit: Maximum number of results to return.
-        Return:
-          A rank-ordered list of document ids."""
-        parser = QueryParser('inclusion',schema=self.index.schema, group=qparser.OrGroup)
-        with self.index.searcher() as searcher:
-            query = parser.parse(query_str)
-            results = searcher.search(query, limit=limit)
-            return [r.docnum for r in results]
-        
-    def print_results(self, results):
-        """ Print to stdout a list of search results.
-        Params:
-          results: A rank-ordered list of document ids."""
-        with self.index.searcher() as searcher:    #returns an iterator of docnums matching this query
-            for r in results:
-                doc = searcher.stored_fields(r)
-                print '\t'.join([doc['nct_id'], doc['title']]), 'Gender: ', doc['gender']
-                print 'maximum age is: ', doc['maximum_age'],' days, and minimum_age is: ', doc['minimum_age'], ' days'
-                print 'Exclusion: ', doc['exclusion']
-                print 'Inclusion: ', doc['inclusion']
-
-
-searcher = Indexsearcher(RAWDIR, limit = 13000)
+# create a searcher to index the documents
+searcher = Indexsearcher(RAWDIR, limit = 13000)   
 
 
