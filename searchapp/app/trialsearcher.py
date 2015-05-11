@@ -4,9 +4,12 @@ from whoosh.qparser import QueryParser
 import whoosh.qparser as qparser
 from whoosh.query import *
 from whoosh.filedb.filestore import FileStorage 
+<<<<<<< HEAD
 from whoosh import highlight
 from colorama import init, Fore
 import re
+=======
+>>>>>>> 313bbfa31161509a99411c932c0a02e58db8e350
     
 class TrialSearcher:
     """ Index a list of trial xml documents to support fielded queries. """
@@ -31,9 +34,12 @@ class TrialSearcher:
         with self.index.searcher() as searcher:
             query = parser.parse(query_str)
             results = searcher.search(query, limit=limit)
+<<<<<<< HEAD
             results.fragmenter = highlight.SentenceFragmenter()
             for hit in results:
                 print (hit.highlights("inclusion"))
+=======
+>>>>>>> 313bbfa31161509a99411c932c0a02e58db8e350
             return [r.docnum for r in results]
         
     def print_results(self, results):
@@ -48,7 +54,10 @@ class TrialSearcher:
                 string += '\n' + 'maximum age is: ' + str(doc['maximum_age']) + ' days, and minimum_age is: ' + str(doc['minimum_age']) + ' days'
                 string += '\n' + 'Exclusion: ' + doc['exclusion']
                 string += '\n' + 'Inclusion: ' + doc['inclusion'] + '\n'
+<<<<<<< HEAD
                 string += re.sub(r'Inclusion'), Fore.RED + r'\1' + Fore.RESET, 
+=======
+>>>>>>> 313bbfa31161509a99411c932c0a02e58db8e350
         print string
         return string
 

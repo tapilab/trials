@@ -24,12 +24,21 @@ def search():
         # Try biomarker: estrogen receptor
         patient_file = Patient(form.age.data,form.age_unit.data,form.gender.data,form.biomarker.data)
         results = searcher.search(patient_file._get_query_string())
+<<<<<<< HEAD
         results = " sss "
+=======
+        resultsPrint = searcher.print_results(results)
+        
+>>>>>>> 313bbfa31161509a99411c932c0a02e58db8e350
         #return results3
         #return "Print here"
         # return '<br>'.join([str(x) for x in results3])  # results(u'results')
         #return '<html>your results are %s</html>  <html>the patient age is %s</html>' % (results,patient_file.age)
+<<<<<<< HEAD
     return render_template('search.html', form=form, results = results)
+=======
+    return render_template('search.html', form=form, results = resultsPrint)
+>>>>>>> 313bbfa31161509a99411c932c0a02e58db8e350
 
 class MyForm(Form):
     age = IntegerField('Patient Age', validators=[DataRequired()])
