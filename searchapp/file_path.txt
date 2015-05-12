@@ -1,8 +1,7 @@
-# Line 4 is for storing path and line 8 is for index path
 # RAWDIR stores the search results from ClinicalTrials.gov, one trial per xml file.
 # Change the path to the trails files you downloaded here
-/Users/JingqianLi/Documents/Courses/Trials/search_result
+RAWDIR:/Users/JingqianLi/Documents/Courses/Trials/search_result
     
 # The search index will be stored here.
 # Change the index path here 
-/Users/JingqianLi/Documents/Courses/Trials/index
+INDEXDIR:/Users/JingqianLi/Documents/Courses/Trials/index

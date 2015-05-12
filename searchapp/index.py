@@ -24,16 +24,19 @@ from whoosh.query import *
 """ Index a list of trial xml documents to support fielded queries. 
     Get the path from file_path.txt """
 lnum = 0
-RAWDIR = " "
-INDEXDIR = " "
 with open('/Users/JingqianLi/Documents/Documents/Github/trials/trials/searchapp/file_path.txt','r') as fp:
     for line in fp:
-        lnum+=1;
-        if (lnum == 4):
-            RAWDIR=line
-        elif (lnum == 8):
-            INDEXDIR=line
-#os.system('mkdir -p $INDEXDIR')
+        if line[:6] == "RAWDIR":
+            RAWDIR = line[7:]
+        elif line[:8] == "INDEXDIR":
+            INDEXDIR = line[9:]
+    fp.close()
+os.system('mkdir -p $INDEXDIR')
+print type(RAWDIR)
+print RAWDIR, INDEXDIR 
+#RAWDIR = "/Users/JingqianLi/Documents/Courses/Trials/search_result"
+INDEXDIR = "/Users/JingqianLi/Documents/Courses/Trials/index"
+print type(RAWDIR)
     
 class Indexsearcher:
         
@@ -154,5 +157,4 @@ class Indexsearcher:
         writer.commit()
 
 # create a searcher to index the documents
-searcher = Indexsearcher(RAWDIR, limit = 13000)   
-
+searcher = Indexsearcher(RAWDIR, limit = 13000)
