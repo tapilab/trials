@@ -4,6 +4,16 @@
 """We download clinical trials from [ClinicalTrials.gov](http://clinicaltrials.gov)
 and create a search engine using [Whoosh](https://pythonhosted.org/Whoosh/)."""
 
+
+# RAWDIR stores the search results from ClinicalTrials.gov, one trial per xml file.
+RAWDIR='/Users/JingqianLi/Documents/Courses/Trials/search_result'
+
+#RAWDIR = '/Users/JingqianLi/Documents/Courses/Trials/SEARCH_TEST'
+    
+# The search index will be stored here.
+INDEXDIR='/Users/JingqianLi/Documents/Courses/Trials/index'
+#!mkdir -p $INDEXDIR
+
 import glob 
 import io
 import sys, traceback
@@ -20,28 +30,22 @@ from whoosh.index import create_in
 from whoosh.qparser import QueryParser
 import whoosh.qparser as qparser
 from whoosh.query import *
-
-""" Index a list of trial xml documents to support fielded queries. 
-    Get the path from file_path.txt """
-lnum = 0
-with open('/Users/JingqianLi/Documents/Documents/Github/trials/trials/searchapp/file_path.txt','r') as fp:
-    for line in fp:
-        if line[:6] == "RAWDIR":
-            RAWDIR = line[7:]
-        elif line[:8] == "INDEXDIR":
-            INDEXDIR = line[9:]
-    fp.close()
-os.system('mkdir -p $INDEXDIR')
-print type(RAWDIR)
-print RAWDIR, INDEXDIR 
-#RAWDIR = "/Users/JingqianLi/Documents/Courses/Trials/search_result"
-INDEXDIR = "/Users/JingqianLi/Documents/Courses/Trials/index"
-print type(RAWDIR)
     
 class Indexsearcher:
+    """ Index a list of trial xml documents to support fielded queries. 
+        Get the path from file_path.txt """
+    lnum = 0
+    with open('file_path.txt','r') as fp:
+        for line in fp:
+            lnum+=1;
+            if (lnum == 3):
+                RAWDIR=line
+            elif (lnum == 7):
+                INDEXDIR=line
+    fp.close()
+    os.system('mkdir -p $INDEXDIR')
         
     def __init__(self, xml_dir, limit=99999):
-        
         """
         Params:
           xml_dir ... path containing a list of xml files, one per trial.
@@ -101,7 +105,7 @@ class Indexsearcher:
                 'start_date': self._find_text(study, '//start_date'),
                 }
             # FIXME: consider Boolean, Numeric field types.
-            writer.add_document(**d)    # what is **d ?
+            writer.add_document(**d)
    
     def _convert_age_to_day(self,age_str):
         t = int(re.findall(r'\d+',age_str)[0])
@@ -157,4 +161,6 @@ class Indexsearcher:
         writer.commit()
 
 # create a searcher to index the documents
-searcher = Indexsearcher(RAWDIR, limit = 13000)
+searcher = Indexsearcher(RAWDIR, limit = 13000)   
+
+
