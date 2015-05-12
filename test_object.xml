@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<patient>
+  <!-- This xml is a patient object that has fields from the trial entity -->
+ <criteria>
+         -  INCLUSION CRITERIA:
+
+        For Proteus Patients
+
+        All affected subjects should have the following general criteria:  mosaic distribution of
+        lesions, progressive course, and sporadic occurrence.
+
+        In addition, they should have either 1 from A, 2 from B or 3 from C.
+
+        A.  Cerebriform connective tissue nevus.
+
+        B.  Epidermal nevus, Disproportionate overgrowth, specific tumors before the age of 30
+        years (bilateral. ovarian cystadenomas or monomorphic parotid adenoma).
+
+        C.  Dysregulated adipose tissue, Vascular malformations, Lung cysts, Facial phenotype.
+
+        The Proteus mail-in and Proteus case review subjects must meet the same eligibility
+        standards as those who come to the clinical center and this will be determined by the
+        review of the materials.
+ </criteria>
+ <gender>male</gender>
+ <healthy_volunteers>no</healthy_volunteers>
+ <location>United States</location>
+ <age>2/1/91</age>
+ <person_id>007</person_id>
+
+</patient>
