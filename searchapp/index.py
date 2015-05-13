@@ -142,8 +142,6 @@ class Indexsearcher:
                 break
         writer.commit()
 
-        
-
 lnum = 0
 RAWDIR = ""
 INDEXDIR = ""
