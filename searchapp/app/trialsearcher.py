@@ -4,7 +4,10 @@ from whoosh.qparser import QueryParser
 import whoosh.qparser as qparser
 from whoosh.query import *
 from whoosh.filedb.filestore import FileStorage 
-    
+from colorama import init, Fore 
+import re
+
+
 class TrialSearcher:
     """ Index a list of trial xml documents to support fielded queries. """
     
@@ -30,7 +33,7 @@ class TrialSearcher:
             results = searcher.search(query, limit=limit)
             return [r.docnum for r in results]
         
-    def print_results(self, results):
+    def print_results(self, results,biomarker):
         """ Print to stdout a list of search results.
         Params:
           results: A rank-ordered list of document ids."""
@@ -41,7 +44,7 @@ class TrialSearcher:
                 string += '\t'.join([doc['nct_id'], doc['title']]) + '\n' + 'Gender: ' + doc['gender']
                 string += '\n' + 'maximum age is: ' + str(doc['maximum_age']) + ' days, and minimum_age is: ' + str(doc['minimum_age']) + ' days'
                 string += '\n' + 'Exclusion: ' + doc['exclusion']
-                string += '\n' + 'Inclusion: ' + doc['inclusion'] + '\n'
+                string += '\n' + 'Inclusion: ' + hit.highlights(biomarker,text=doc['inclusion']) + '\n'
         print string
         return string
 
