@@ -144,7 +144,7 @@ class Indexsearcher:
 lnum = 0
 RAWDIR = ""
 INDEXDIR = ""
-with open('/Users/JingqianLi/Documents/Documents/Github/trials/searchapp/file_path.txt','r') as fp:
+with open('file_path.txt','r') as fp:
     for line in fp:
         if line[:6] == "RAWDIR":
             RAWDIR = line[7:].strip()

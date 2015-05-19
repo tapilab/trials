@@ -40,8 +40,6 @@ class TrialSearcher:
         Params:
           results: A rank-ordered list of document ids."""
         string = ''
-        html_parser = HTMLParser.HTMLParser()
-
         with self.index.searcher() as searcher:    #returns an iterator of docnums matching this query
             for r in results:
                 doc = searcher.stored_fields(r)

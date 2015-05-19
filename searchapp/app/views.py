@@ -9,13 +9,9 @@ from . import searcher
 from colorama import init, Fore
 import re
 
-@app.route('/')
-def index():
-    return "Print here"
-
 # searching page
-@app.route('/search/', methods=['GET', 'POST'])
-def search():
+@app.route('/', methods=['GET', 'POST'])
+def index():
     form = MyForm()
     results = None
     resultsPrint = None
