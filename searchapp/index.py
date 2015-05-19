@@ -126,11 +126,10 @@ class Indexsearcher:
                         source=TEXT,
                         start_date=TEXT,
                         )
-    
         self.index = create_in(INDEXDIR, schema)
         writer = self.index.writer(limitmb=99999)  # CHANGE THE LIMIT
         count = 0
-        for xmlfile in glob.glob(xml_dir + '/*.xml'):    # ??
+        for xmlfile in glob.glob(xml_dir + '/*.xml'):    
             try:
                 self._add_doc(xmlfile, writer)
             except:
@@ -145,14 +144,16 @@ class Indexsearcher:
 lnum = 0
 RAWDIR = ""
 INDEXDIR = ""
-with open('/Users/JingqianLi/Documents/Documents/Github/trials/trials/searchapp/file_path.txt','r') as fp:
+with open('/Users/JingqianLi/Documents/Documents/Github/trials/searchapp/file_path.txt','r') as fp:
     for line in fp:
         if line[:6] == "RAWDIR":
-            RAWDIR = line[7:]
+            RAWDIR = line[7:].strip()
         elif line[:8] == "INDEXDIR":
-            INDEXDIR = line[9:]
+            INDEXDIR = line[9:].strip()
     fp.close()
-os.system('mkdir -p $INDEXDIR')
-print RAWDIR, INDEXDIR 
+try:
+    os.mkdirs(INDEXDIR)
+except:
+    pass
 # create a searcher to index the documents
 searcher = Indexsearcher(RAWDIR, limit = 13000)

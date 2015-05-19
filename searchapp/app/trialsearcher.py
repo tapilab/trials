@@ -6,6 +6,8 @@ from whoosh.query import *
 from whoosh.filedb.filestore import FileStorage 
 from colorama import init, Fore 
 import re
+import HTMLParser
+from whoosh.highlight import *
 
 
 class TrialSearcher:
@@ -38,13 +40,16 @@ class TrialSearcher:
         Params:
           results: A rank-ordered list of document ids."""
         string = ''
+        html_parser = HTMLParser.HTMLParser()
+
         with self.index.searcher() as searcher:    #returns an iterator of docnums matching this query
             for r in results:
                 doc = searcher.stored_fields(r)
-                string += '\t'.join([doc['nct_id'], doc['title']]) + '\n' + 'Gender: ' + doc['gender']
-                string += '\n' + 'maximum age is: ' + str(doc['maximum_age']) + ' days, and minimum_age is: ' + str(doc['minimum_age']) + ' days'
-                string += '\n' + 'Exclusion: ' + doc['exclusion']
-                string += '\n' + 'Inclusion: ' + hit.highlights(biomarker,text=doc['inclusion']) + '\n'
-        print string
+                pattern = r'(' + re.escape(biomarker) + ')'
+                string += '<b>' + '\t'.join([doc['nct_id'], doc['title']]) + '</b>'
+                string += '<p>' + 'Gender: ' + doc['gender'] + '</p>'
+                string += '<p>' + 'maximum age is: ' + str(doc['maximum_age']) + ' days, and minimum_age is: ' + str(doc['minimum_age']) + ' days' +'</p>'
+                string += '<b>' + 'Inclusion: ' + '</b>' + '<p>'+ re.sub(pattern, r'<b><font color="red">\1</font></b>', doc['inclusion']) + '</p>'
+                string += '<b>' + 'Exclusion: ' '</b>' + '<p>' + doc['exclusion'] + '</p>'
         return string
 

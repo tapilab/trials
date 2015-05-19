@@ -1,6 +1,3 @@
-RAWDIR = '/Users/JingqianLi/Documents/Courses/Trials/search_results'
-INDEXDIR='/Users/JingqianLi/Documents/Courses/Trials/index'
-
 from flask import render_template
 from app import app
 from flask_wtf import Form
@@ -27,9 +24,6 @@ def search():
         patient_file = Patient(form.age.data,form.age_unit.data,form.gender.data,form.biomarker.data)
         results = searcher.search(patient_file._get_query_string())
         resultsPrint = searcher.print_results(results,form.biomarker.data)
-        print resultsPrint
-        redString = Highlight(resultsPrint)
-        print redString.highlight(form.biomarker.data)
         print form.biomarker.data
         # return '<br>'.join([str(x) for x in results3])  # results(u'results')
         #return '<html>your results are %s</html>  <html>the patient age is %s</html>' % (results,patient_file.age)
@@ -44,10 +38,3 @@ class MyForm(Form):
     def __init__(self):
         super(MyForm, self).__init__(csrf_enabled=False)
 
-class Highlight:
-    def __init__(self, string):
-        self.s = string
-
-    def highlight(self,biomarker):
-        sred = re.sub(biomarker, Fore.RED + r'\1' + Fore.RESET, self.s)
-        return sred
