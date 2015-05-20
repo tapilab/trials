@@ -40,14 +40,19 @@ class TrialSearcher:
         Params:
           results: A rank-ordered list of document ids."""
         string = ''
+        i = 0
+        pattern = r'((?i)' + re.escape(biomarker) + ')'
         with self.index.searcher() as searcher:    #returns an iterator of docnums matching this query
             for r in results:
+                i += 1
                 doc = searcher.stored_fields(r)
-                pattern = r'(' + re.escape(biomarker) + ')'
+                re.sub(pattern, r'<b><font color="red">\1</font></b>', doc['inclusion'])
+                string += '<p><b>' + 'Result %d' % i + '</b></p>'
                 string += '<b>' + '\t'.join([doc['nct_id'], doc['title']]) + '</b>'
                 string += '<p>' + 'Gender: ' + doc['gender'] + '</p>'
                 string += '<p>' + 'maximum age is: ' + str(doc['maximum_age']) + ' days, and minimum_age is: ' + str(doc['minimum_age']) + ' days' +'</p>'
                 string += '<b>' + 'Inclusion: ' + '</b>' + '<p>'+ re.sub(pattern, r'<b><font color="red">\1</font></b>', doc['inclusion']) + '</p>'
                 string += '<b>' + 'Exclusion: ' '</b>' + '<p>' + doc['exclusion'] + '</p>'
+        string = '<b><font color="gray">' + '%d' % i + ' matching results' + '</font></b>' + string
         return string
 
