@@ -3,5 +3,7 @@
 In this project, our goal is to rank clinical trials based on provided inclusion/exclusion criteria.
 
 1. Download Cancer-related trials from https://clinicaltrials.gov/
-2. Extract the "Recruitment" section, e.g., https://clinicaltrials.gov/ct2/show/record/NCT01206543?cond=%22Adamantinoma%22&rank=2
-3. 
+2. Index all the trails with Whoosh 
+3. Run the search app which allows user to input patient information with Flask framwork 
+4. Create a patient object then pass a searching query for search
+5. Return the match results and highlight the matching biomarker terms.
