@@ -20,7 +20,6 @@ def index():
         patient_file = Patient(form.age.data,form.age_unit.data,form.gender.data,form.biomarker.data)
         results = searcher.search(patient_file._get_query_string())
         resultsPrint = searcher.print_results(results,form.biomarker.data)
-        print form.biomarker.data
     return render_template('search.html', form=form, results = resultsPrint)
 
 class MyForm(Form):
