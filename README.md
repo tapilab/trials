@@ -14,7 +14,9 @@ In this project, our goal is to rank clinical trials based on provided inclusion
 
 4. To launch the server, open http://localhost:5000 on the browser.
 
-5. Input the patient file, gender and age are required, biomarker is optional. Click "Go" to search.
+5. Input the patient file, gender and age are required, biomarker is optional:
+ For example, 33 year, female, biomarker: estrogen receptor
+ Click "Go" to search.
 
 6. The info will be used as creating a patient object for searching query
 
