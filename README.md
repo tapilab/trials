@@ -23,7 +23,7 @@ In this project, our goal is to rank clinical trials based on provided inclusion
 7. Results will be returned with highlighted matching biomarker terms.
 
 Notice: Anytime the trials files are changed, documents need to be indexed again
-The results are returned in a ranking order, use the NCT id to track the trail you are interested.
+The results are returned in a ranking order, use the NCT id to track the trial you are interested.
 
 
 
